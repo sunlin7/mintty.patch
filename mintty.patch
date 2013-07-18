@@ -1,0 +1,21 @@
+--- wininput.c.bak	2013-07-18 08:56:31.959565500 +0800
++++ wininput.c	2013-07-18 09:01:37.501864400 +0800
+@@ -398,7 +398,17 @@
+         switch (key) {
+           when VK_F2:  send_syscommand(IDM_NEW);
+           when VK_F4:  send_syscommand(SC_CLOSE);
+-          when VK_F8:  send_syscommand(IDM_RESET);
++          /* when VK_F8:  send_syscommand(IDM_RESET); */
++          when VK_F8: term.backspace_sends_bs = !term.backspace_sends_bs;
++          when VK_F9: {
++              static char last_locale[100] = {0};
++              if (0 == strcmp(cs_get_locale(), "C.GBK")) {
++                  cs_set_locale(last_locale);
++              } else {
++                  strncpy(last_locale, cs_get_locale(), sizeof(last_locale));
++                  cs_set_locale("C.GBK");
++              }
++          }
+           when VK_F10: send_syscommand(IDM_DEFSIZE);
+           when VK_F11: send_syscommand(IDM_FULLSCREEN);
+           when VK_F12: send_syscommand(IDM_FLIPSCREEN);
